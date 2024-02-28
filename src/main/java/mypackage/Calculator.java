@@ -1,27 +1,22 @@
 package mypackage;
 
-import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
-public class Calculator extends HttpServlet
-{
-	public long addFucn(long first, long second){
-		
-		return first+second;
-	}
-	
-	public long subFucn(long first, long second){
-		
-		return second-first;
-	}
-	
-	public long mulFucn(long first, long second){
-		
-		return first*second;
-	}
-	
-	private Connection getDBConnection() throws Exception {
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class Calculator extends HttpServlet {
+    // Your existing methods remain unchanged
+
+    private Connection getDBConnection() throws SQLException, ClassNotFoundException {
         String jdbcURL = "jdbc:mysql://192.168.138.126:3306/myDB";
         String dbUser = "mysql";
         String dbPassword = "mysql";
@@ -31,7 +26,6 @@ public class Calculator extends HttpServlet
         return connection;
     }
 
-    // Method to save calculation result to the database
     private void saveResultToDatabase(String operation, long result) {
         try (Connection connection = getDBConnection()) {
             String query = "INSERT INTO calculations (operation, result) VALUES (?, ?)";
@@ -40,39 +34,37 @@ public class Calculator extends HttpServlet
                 preparedStatement.setLong(2, result);
                 preparedStatement.executeUpdate();
             }
-        } catch (Exception e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
-        try
-        {
-        response.setContentType("text/html");
-        PrintWriter out= response.getWriter();
-        int a1= Integer.parseInt(request.getParameter("n1"));
-        int a2= Integer.parseInt(request.getParameter("n2"));
-        
-        
-        
-        if(request.getParameter("r1")!=null)
-        {
-            out.println("<h1>Addition</h1>"+addFucn(a1, a2));
-        }
-        if(request.getParameter("r2")!=null)
-        {
-            out.println("<h1>Substraction</h1>"+subFucn(a1, a2));
-        }
-        if(request.getParameter("r3")!=null)
-        {
-            out.println("<h1>Multiplication</h1>"+mulFucn(a1, a2));
-        }
-        RequestDispatcher rd=request.getRequestDispatcher("/index.jsp");  
-        rd.include(request, response);  
-        }
-        catch(Exception e)
-        {
 
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            response.setContentType("text/html");
+            PrintWriter out = response.getWriter();
+            int a1 = Integer.parseInt(request.getParameter("n1"));
+            int a2 = Integer.parseInt(request.getParameter("n2"));
+
+            if (request.getParameter("r1") != null) {
+                long result = addFucn(a1, a2);
+                out.println("<h1>Addition</h1>" + result);
+                saveResultToDatabase("addition", result);
+            }
+            if (request.getParameter("r2") != null) {
+                long result = subFucn(a1, a2);
+                out.println("<h1>Subtraction</h1>" + result);
+                saveResultToDatabase("subtraction", result);
+            }
+            if (request.getParameter("r3") != null) {
+                long result = mulFucn(a1, a2);
+                out.println("<h1>Multiplication</h1>" + result);
+                saveResultToDatabase("multiplication", result);
+            }
+            RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
+            rd.include(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
