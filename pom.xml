@@ -26,6 +26,20 @@
     <version>2.5</version>
 </dependency>
 </dependencies>
+  <build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.8.1</version> <!-- Use a version that supports Java 7 or higher -->
+            <configuration>
+                <source>7</source> <!-- Set the Java source version to 7 or higher -->
+                <target>7</target> <!-- Set the Java target version to 7 or higher -->
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+
 <distributionManagement>
   <repository>
     <id>releases</id>
