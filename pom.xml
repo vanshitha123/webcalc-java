@@ -19,6 +19,11 @@
       <version>4.8.2</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>8.0.23</version> <!-- Use the version that corresponds to your MySQL server -->
+</dependency>
     <!-- https://mvnrepository.com/artifact/javax.servlet/servlet-api -->
 <dependency>
     <groupId>javax.servlet</groupId>
