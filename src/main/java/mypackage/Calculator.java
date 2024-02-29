@@ -10,19 +10,26 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 public class Calculator extends HttpServlet {
-    // ... (existing methods for addition, subtraction, multiplication)
-
-    // Database connection parameters
-    private static final String JDBC_URL = "jdbc:mysql://192.168.138.114:3306/myDB";
-    private static final String JDBC_USER = "mysql";
-    private static final String JDBC_PASSWORD = "mysql";
-
-    // Database connection method
-    private Connection getDBConnection() throws SQLException {
-        return DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+    public long addFucn(long first, long second) {
+        return first + second;
     }
 
-    // Save calculation result to the database
+    public long subFucn(long first, long second) {
+        return second - first;
+    }
+
+    public long mulFucn(long first, long second) {
+        return first * second;
+    }
+
+    private Connection getDBConnection() throws SQLException {
+        // Replace with your database connection details
+        String jdbcUrl = "jdbc:mysql://localhost:3306/myDB";
+        String jdbcUser = "mysql";
+        String jdbcPassword = "mysql";
+        return DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
+    }
+
     private void saveToDatabase(String operation, long result) {
         try (Connection connection = getDBConnection()) {
             String query = "INSERT INTO calculations (operation, result) VALUES (?, ?)";
@@ -69,5 +76,17 @@ public class Calculator extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    // Test the functionality with a simple main method
+    public static void main(String[] args) {
+        Calculator calculator = new Calculator();
+        long resultAdd = calculator.addFucn(5, 3);
+        long resultSub = calculator.subFucn(5, 3);
+        long resultMul = calculator.mulFucn(5, 3);
+
+        System.out.println("Addition: " + resultAdd);
+        System.out.println("Subtraction: " + resultSub);
+        System.out.println("Multiplication: " + resultMul);
     }
 }
