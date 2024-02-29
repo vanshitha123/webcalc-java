@@ -11,18 +11,6 @@ import javax.servlet.http.*;
 
 public class Calculator extends HttpServlet {
 
-    public long addFucn(long first, long second) {
-        return first + second;
-    }
-
-    public long subFucn(long first, long second) {
-        return second - first;
-    }
-
-    public long mulFucn(long first, long second) {
-        return first * second;
-    }
-
     // Database connectivity parameters
     private static final String JDBC_URL = "jdbc:mysql://192.168.138.114:3306/myDB";
     private static final String JDBC_USER = "mysql";
@@ -34,15 +22,16 @@ public class Calculator extends HttpServlet {
     }
 
     // Create table SQL statement
-    private static final String CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS calculator_data ("
-            + "id INT AUTO_INCREMENT PRIMARY KEY, "
-            + "calculation_type VARCHAR(20), "
-            + "operand1 INT, "
-            + "operand2 INT, "
-            + "result INT"
-            + ")";
+    private static final String CREATE_TABLE_SQL =
+            "CREATE TABLE IF NOT EXISTS calculator_data (" +
+                    "id INT AUTO_INCREMENT PRIMARY KEY," +
+                    "calculation_type VARCHAR(20)," +
+                    "operand1 INT," +
+                    "operand2 INT," +
+                    "result INT" +
+                    ")";
 
-    // Execute the table creation SQL statement
+    // Execute table creation
     static {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_TABLE_SQL)) {
@@ -52,7 +41,7 @@ public class Calculator extends HttpServlet {
         }
     }
 
-    // Store calculation result in the database
+    // Sample method for database interaction
     public void storeCalculationResult(String calculationType, long operand1, long operand2, long result) {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -70,7 +59,18 @@ public class Calculator extends HttpServlet {
         }
     }
 
-    // Retrieve data from the database
+    public long addFucn(long first, long second) {
+        return first + second;
+    }
+
+    public long subFucn(long first, long second) {
+        return second - first;
+    }
+
+    public long mulFucn(long first, long second) {
+        return first * second;
+    }
+
     public int retrieveDataFromDatabase() {
         int result = 0;
 
@@ -78,8 +78,8 @@ public class Calculator extends HttpServlet {
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT result FROM calculator_data");
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
-            if (resultSet.next()) {
-                result = resultSet.getInt("result");
+            while (resultSet.next()) {
+                result += resultSet.getInt("result");
             }
 
         } catch (SQLException e) {
