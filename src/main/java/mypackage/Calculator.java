@@ -1,6 +1,5 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
+package mypackage;
+
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -26,19 +25,17 @@ public class Calculator extends HttpServlet {
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
+            try (Connection connection = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword)) {
+                String query = "INSERT INTO calculator_results (first_number, second_number, operation, result) VALUES (?, ?, ?, ?)";
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                    preparedStatement.setLong(1, first);
+                    preparedStatement.setLong(2, second);
+                    preparedStatement.setString(3, operation);
+                    preparedStatement.setLong(4, result);
 
-            String query = "INSERT INTO calculator_results (first_number, second_number, operation, result) VALUES (?, ?, ?, ?)";
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                preparedStatement.setLong(1, first);
-                preparedStatement.setLong(2, second);
-                preparedStatement.setString(3, operation);
-                preparedStatement.setLong(4, result);
-
-                preparedStatement.executeUpdate();
+                    preparedStatement.executeUpdate();
+                }
             }
-
-            connection.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
