@@ -1,10 +1,21 @@
 package mypackage;
 
 import java.io.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
+@WebServlet("/Calculator")
 public class Calculator extends HttpServlet {
+    // JDBC connection parameters
+    private static final String JDBC_URL = "jdbc:mysql://192.168.138.114:3306/myDB";
+    private static final String JDBC_USER = "mysql";
+    private static final String JDBC_PASSWORD = "mysql";
 
     public long addFucn(long first, long second) {
         return first + second;
@@ -18,25 +29,15 @@ public class Calculator extends HttpServlet {
         return first * second;
     }
 
-    public void storeResult(long result, String operation, long first, long second) {
-        String jdbcUrl = "jdbc:mysql://192.168.138.114:3306/myDB";
-        String jdbcUser = "mysql";
-        String jdbcPassword = "mysql";
-
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            try (Connection connection = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword)) {
-                String query = "INSERT INTO calculator_results (first_number, second_number, operation, result) VALUES (?, ?, ?, ?)";
-                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                    preparedStatement.setLong(1, first);
-                    preparedStatement.setLong(2, second);
-                    preparedStatement.setString(3, operation);
-                    preparedStatement.setLong(4, result);
-
-                    preparedStatement.executeUpdate();
-                }
+    public void storeResultInDatabase(long result, String operation) {
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+            String sql = "INSERT INTO calculation_results (result, operation) VALUES (?, ?)";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setLong(1, result);
+                preparedStatement.setString(2, operation);
+                preparedStatement.executeUpdate();
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -51,19 +52,21 @@ public class Calculator extends HttpServlet {
             if (request.getParameter("r1") != null) {
                 long result = addFucn(a1, a2);
                 out.println("<h1>Addition</h1>" + result);
-                storeResult(result, "addition", a1, a2);
+                // Store the result in the database
+                storeResultInDatabase(result, "Addition");
             }
             if (request.getParameter("r2") != null) {
                 long result = subFucn(a1, a2);
                 out.println("<h1>Subtraction</h1>" + result);
-                storeResult(result, "subtraction", a1, a2);
+                // Store the result in the database
+                storeResultInDatabase(result, "Subtraction");
             }
             if (request.getParameter("r3") != null) {
                 long result = mulFucn(a1, a2);
                 out.println("<h1>Multiplication</h1>" + result);
-                storeResult(result, "multiplication", a1, a2);
+                // Store the result in the database
+                storeResultInDatabase(result, "Multiplication");
             }
-
             RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
             rd.include(request, response);
         } catch (Exception e) {
