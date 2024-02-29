@@ -10,6 +10,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 public class Calculator extends HttpServlet {
+
     public long addFucn(long first, long second) {
         return first + second;
     }
@@ -23,15 +24,26 @@ public class Calculator extends HttpServlet {
     }
 
     private Connection getDBConnection() throws SQLException {
-        // Replace with your database connection details
+        // Update with your database connection details
         String jdbcUrl = "jdbc:mysql://192.168.138.114:3306/myDB";
         String jdbcUser = "mysql";
         String jdbcPassword = "mysql";
+
+        // Register the JDBC driver (you might not need this if using JDBC 4.0+)
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        // Create and return the connection
         return DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
     }
 
     private void saveToDatabase(String operation, long result) {
         try (Connection connection = getDBConnection()) {
+            connection.setAutoCommit(false); // Disable auto-commit
+
             String query = "INSERT INTO calculations (operation, result) VALUES (?, ?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, operation);
@@ -39,6 +51,7 @@ public class Calculator extends HttpServlet {
                 int rowsAffected = statement.executeUpdate();
                 if (rowsAffected > 0) {
                     System.out.println("Data successfully inserted into the database.");
+                    connection.commit(); // Commit the transaction
                 } else {
                     System.err.println("Failed to insert data into the database.");
                 }
@@ -78,7 +91,6 @@ public class Calculator extends HttpServlet {
         }
     }
 
-    // Test the functionality with a simple main method
     public static void main(String[] args) {
         Calculator calculator = new Calculator();
         long resultAdd = calculator.addFucn(5, 3);
