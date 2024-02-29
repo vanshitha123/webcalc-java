@@ -13,8 +13,8 @@
         <!-- Servlet API Dependency -->
         <dependency>
             <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>3.1.0</version>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version> <!-- Use the latest version -->
             <scope>provided</scope>
         </dependency>
 
