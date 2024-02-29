@@ -12,9 +12,9 @@ import javax.servlet.http.*;
 public class Calculator extends HttpServlet {
 
     // Database connectivity parameters
-    private static final String JDBC_URL = "jdbc:mysql://your_mysql_host:3306/your_database";
-    private static final String JDBC_USER = "your_mysql_user";
-    private static final String JDBC_PASSWORD = "your_mysql_password";
+    private static final String JDBC_URL = "jdbc:mysql://192.168.138.114:3306/myDB";
+    private static final String JDBC_USER = "mysql";
+    private static final String JDBC_PASSWORD = "mysql";
 
     // Database connection method
     private Connection getConnection() throws SQLException {
