@@ -24,7 +24,7 @@ public class Calculator extends HttpServlet {
     }
 
     // Database connectivity parameters
-    private static final String JDBC_URL = "jdbc:mysql://192.168.138.114/myDB";
+    private static final String JDBC_URL = "jdbc:mysql://192.168.138.114:3306/myDB";
     private static final String JDBC_USER = "mysql";
     private static final String JDBC_PASSWORD = "mysql";
 
@@ -33,16 +33,53 @@ public class Calculator extends HttpServlet {
         return DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
     }
 
-    // Sample method for database interaction
+    // Create table SQL statement
+    private static final String CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS calculator_data ("
+            + "id INT AUTO_INCREMENT PRIMARY KEY, "
+            + "calculation_type VARCHAR(20), "
+            + "operand1 INT, "
+            + "operand2 INT, "
+            + "result INT"
+            + ")";
+
+    // Execute the table creation SQL statement
+    static {
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_TABLE_SQL)) {
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Store calculation result in the database
+    public void storeCalculationResult(String calculationType, long operand1, long operand2, long result) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "INSERT INTO calculator_data (calculation_type, operand1, operand2, result) VALUES (?, ?, ?, ?)")) {
+
+            preparedStatement.setString(1, calculationType);
+            preparedStatement.setLong(2, operand1);
+            preparedStatement.setLong(3, operand2);
+            preparedStatement.setLong(4, result);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle the exception appropriately in your application
+        }
+    }
+
+    // Retrieve data from the database
     public int retrieveDataFromDatabase() {
         int result = 0;
 
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT your_column FROM your_table");
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT result FROM calculator_data");
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             if (resultSet.next()) {
-                result = resultSet.getInt("your_column");
+                result = resultSet.getInt("result");
             }
 
         } catch (SQLException e) {
@@ -60,13 +97,19 @@ public class Calculator extends HttpServlet {
             int a2 = Integer.parseInt(request.getParameter("n2"));
 
             if (request.getParameter("r1") != null) {
-                out.println("<h1>Addition</h1>" + addFucn(a1, a2));
+                long result = addFucn(a1, a2);
+                out.println("<h1>Addition</h1>" + result);
+                storeCalculationResult("Addition", a1, a2, result);
             }
             if (request.getParameter("r2") != null) {
-                out.println("<h1>Subtraction</h1>" + subFucn(a1, a2));
+                long result = subFucn(a1, a2);
+                out.println("<h1>Subtraction</h1>" + result);
+                storeCalculationResult("Subtraction", a1, a2, result);
             }
             if (request.getParameter("r3") != null) {
-                out.println("<h1>Multiplication</h1>" + mulFucn(a1, a2));
+                long result = mulFucn(a1, a2);
+                out.println("<h1>Multiplication</h1>" + result);
+                storeCalculationResult("Multiplication", a1, a2, result);
             }
 
             // Database interaction example
