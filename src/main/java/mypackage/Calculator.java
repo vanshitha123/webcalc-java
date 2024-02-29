@@ -4,7 +4,6 @@ import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.servlet.*;
@@ -14,9 +13,9 @@ public class Calculator extends HttpServlet {
     // ... (existing methods for addition, subtraction, multiplication)
 
     // Database connection parameters
-    private static final String JDBC_URL = "jdbc:mysql://192.168.138.114:3306/myDB";
-    private static final String JDBC_USER = "mysql";
-    private static final String JDBC_PASSWORD = "mysql";
+    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/your_database_name";
+    private static final String JDBC_USER = "your_username";
+    private static final String JDBC_PASSWORD = "your_password";
 
     // Database connection method
     private Connection getDBConnection() throws SQLException {
@@ -35,6 +34,19 @@ public class Calculator extends HttpServlet {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    // Methods for calculations
+    public long addFucn(long first, long second) {
+        return first + second;
+    }
+
+    public long subFucn(long first, long second) {
+        return second - first;
+    }
+
+    public long mulFucn(long first, long second) {
+        return first * second;
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
