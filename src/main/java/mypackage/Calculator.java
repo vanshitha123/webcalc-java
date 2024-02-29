@@ -1,9 +1,7 @@
-// Import necessary packages
-import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-
+import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -21,36 +19,28 @@ public class Calculator extends HttpServlet {
         return first * second;
     }
 
-    // Method to store calculation results in the database
     public void storeResult(long result, String operation, long first, long second) {
         String jdbcUrl = "jdbc:mysql://192.168.138.114:3306/myDB";
         String jdbcUser = "mysql";
         String jdbcPassword = "mysql";
 
         try {
-            // Load the JDBC driver
             Class.forName("com.mysql.cj.jdbc.Driver");
-
-            // Establish a connection
             Connection connection = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
 
-            // Create a PreparedStatement
             String query = "INSERT INTO calculator_results (first_number, second_number, operation, result) VALUES (?, ?, ?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setLong(1, first);
-            preparedStatement.setLong(2, second);
-            preparedStatement.setString(3, operation);
-            preparedStatement.setLong(4, result);
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setLong(1, first);
+                preparedStatement.setLong(2, second);
+                preparedStatement.setString(3, operation);
+                preparedStatement.setLong(4, result);
 
-            // Execute the query
-            preparedStatement.executeUpdate();
+                preparedStatement.executeUpdate();
+            }
 
-            // Close resources
-            preparedStatement.close();
             connection.close();
         } catch (Exception e) {
             e.printStackTrace();
-            // Handle exceptions appropriately
         }
     }
 
