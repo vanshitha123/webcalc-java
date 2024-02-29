@@ -12,9 +12,9 @@ import javax.servlet.http.*;
 public class Calculator extends HttpServlet {
 
     // Database connectivity parameters
-    private static final String JDBC_URL = "jdbc:mysql://192.168.138.114:3306/myDB";
-    private static final String JDBC_USER = "mysql";
-    private static final String JDBC_PASSWORD = "mysql";
+    private static final String JDBC_URL = "jdbc:mysql://your_mysql_host:3306/your_database";
+    private static final String JDBC_USER = "your_mysql_user";
+    private static final String JDBC_PASSWORD = "your_mysql_password";
 
     // Database connection method
     private Connection getConnection() throws SQLException {
@@ -90,9 +90,10 @@ public class Calculator extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+
         try {
-            response.setContentType("text/html");
-            PrintWriter out = response.getWriter();
             int a1 = Integer.parseInt(request.getParameter("n1"));
             int a2 = Integer.parseInt(request.getParameter("n2"));
 
@@ -121,6 +122,7 @@ public class Calculator extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
+            out.println("<h1>Error Occurred</h1>");
         }
     }
 }
