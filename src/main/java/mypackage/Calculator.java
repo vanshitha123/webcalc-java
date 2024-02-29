@@ -13,9 +13,9 @@ public class Calculator extends HttpServlet {
     // ... (existing methods for addition, subtraction, multiplication)
 
     // Database connection parameters
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/your_database_name";
-    private static final String JDBC_USER = "your_username";
-    private static final String JDBC_PASSWORD = "your_password";
+    private static final String JDBC_URL = "jdbc:mysql://192.168.138.114:3306/myDB";
+    private static final String JDBC_USER = "mysql";
+    private static final String JDBC_PASSWORD = "mysql";
 
     // Database connection method
     private Connection getDBConnection() throws SQLException {
