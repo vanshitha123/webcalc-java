@@ -29,24 +29,16 @@ public class Calculator extends HttpServlet {
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, operation);
                 statement.setLong(2, result);
-                statement.executeUpdate();
+                int rowsAffected = statement.executeUpdate();
+                if (rowsAffected > 0) {
+                    System.out.println("Data successfully inserted into the database.");
+                } else {
+                    System.err.println("Failed to insert data into the database.");
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    // Methods for calculations
-    public long addFucn(long first, long second) {
-        return first + second;
-    }
-
-    public long subFucn(long first, long second) {
-        return second - first;
-    }
-
-    public long mulFucn(long first, long second) {
-        return first * second;
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
