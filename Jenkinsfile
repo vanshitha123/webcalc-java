@@ -15,7 +15,14 @@ pipeline {
                 sh 'mvn clean test install'
             }
         }
-
+        stage('SonarQube Analysis') {
+           steps{
+              withSonarQubeEnv('sonarqube') {
+              sh 'mvn sonar:sonar'
+                }
+            }
+        }
+    
         stage('Deploy to Tomcat') {
             steps {
                 // Copy the war file to Tomcat webapps directory
