@@ -65,15 +65,15 @@ public class Calculator extends HttpServlet {
         }
     }
 
-    public long addFucn(long first, long second) {
+    public long addFunc(long first, long second) {
         return first + second;
     }
 
-    public long subFucn(long first, long second) {
+    public long subFunc(long first, long second) {
         return second - first;
     }
 
-    public long mulFucn(long first, long second) {
+    public long mulFunc(long first, long second) {
         return first * second;
     }
 
@@ -104,17 +104,17 @@ public class Calculator extends HttpServlet {
             int a2 = Integer.parseInt(request.getParameter("n2"));
 
             if (request.getParameter("r1") != null) {
-                long result = addFucn(a1, a2);
+                long result = addFunc(a1, a2);
                 out.println("<h1>Addition</h1>" + result);
                 storeCalculationResult("Addition", a1, a2, result);
             }
             if (request.getParameter("r2") != null) {
-                long result = subFucn(a1, a2);
+                long result = subFunc(a1, a2);
                 out.println("<h1>Subtraction</h1>" + result);
                 storeCalculationResult("Subtraction", a1, a2, result);
             }
             if (request.getParameter("r3") != null) {
-                long result = mulFucn(a1, a2);
+                long result = mulFunc(a1, a2);
                 out.println("<h1>Multiplication</h1>" + result);
                 storeCalculationResult("Multiplication", a1, a2, result);
             }
