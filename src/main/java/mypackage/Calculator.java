@@ -52,10 +52,16 @@ public class Calculator extends HttpServlet {
             preparedStatement.setLong(3, operand2);
             preparedStatement.setLong(4, result);
 
-            preparedStatement.executeUpdate();
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Data inserted successfully");
+            } else {
+                System.out.println("Failed to insert data");
+            }
 
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle the exception appropriately in your application
+            e.printStackTrace();
         }
     }
 
@@ -83,7 +89,7 @@ public class Calculator extends HttpServlet {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle the exception appropriately in your application
+            e.printStackTrace();
         }
 
         return result;
