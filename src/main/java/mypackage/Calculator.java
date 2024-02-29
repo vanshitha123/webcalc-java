@@ -1,70 +1,13 @@
-package mypackage;
-
+// Import necessary packages
 import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 public class Calculator extends HttpServlet {
-
-    // Database connectivity parameters
-    private static final String JDBC_URL = "jdbc:mysql://192.168.138.114:3306/myDB?useSSL=false&serverTimezone=UTC";
-    private static final String JDBC_USER = "mysql";
-    private static final String JDBC_PASSWORD = "mysql";
-
-    // Database connection method
-    private Connection getConnection() throws SQLException {
-        System.out.println("Connecting to database...");
-        return DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
-    }
-
-    // Create table SQL statement
-    private static final String CREATE_TABLE_SQL =
-            "CREATE TABLE IF NOT EXISTS calculator_data (" +
-                    "id INT AUTO_INCREMENT PRIMARY KEY," +
-                    "calculation_type VARCHAR(20)," +
-                    "operand1 INT," +
-                    "operand2 INT," +
-                    "result INT" +
-                    ")";
-
-    // Execute table creation
-    static {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_TABLE_SQL)) {
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Sample method for database interaction
-    public void storeCalculationResult(String calculationType, long operand1, long operand2, long result) {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "INSERT INTO calculator_data (calculation_type, operand1, operand2, result) VALUES (?, ?, ?, ?)")) {
-
-            preparedStatement.setString(1, calculationType);
-            preparedStatement.setLong(2, operand1);
-            preparedStatement.setLong(3, operand2);
-            preparedStatement.setLong(4, result);
-
-            int rowsAffected = preparedStatement.executeUpdate();
-
-            if (rowsAffected > 0) {
-                System.out.println("Data inserted successfully");
-            } else {
-                System.out.println("Failed to insert data");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     public long addFucn(long first, long second) {
         return first + second;
@@ -78,58 +21,66 @@ public class Calculator extends HttpServlet {
         return first * second;
     }
 
-    public int retrieveDataFromDatabase() {
-        int result = 0;
+    // Method to store calculation results in the database
+    public void storeResult(long result, String operation, long first, long second) {
+        String jdbcUrl = "jdbc:mysql://192.168.138.114:3306/myDB";
+        String jdbcUser = "mysql";
+        String jdbcPassword = "mysql";
 
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT result FROM calculator_data");
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+        try {
+            // Load the JDBC driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
 
-            while (resultSet.next()) {
-                result += resultSet.getInt("result");
-            }
+            // Establish a connection
+            Connection connection = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
 
-        } catch (SQLException e) {
+            // Create a PreparedStatement
+            String query = "INSERT INTO calculator_results (first_number, second_number, operation, result) VALUES (?, ?, ?, ?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setLong(1, first);
+            preparedStatement.setLong(2, second);
+            preparedStatement.setString(3, operation);
+            preparedStatement.setLong(4, result);
+
+            // Execute the query
+            preparedStatement.executeUpdate();
+
+            // Close resources
+            preparedStatement.close();
+            connection.close();
+        } catch (Exception e) {
             e.printStackTrace();
+            // Handle exceptions appropriately
         }
-
-        return result;
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
-
         try {
+            response.setContentType("text/html");
+            PrintWriter out = response.getWriter();
             int a1 = Integer.parseInt(request.getParameter("n1"));
             int a2 = Integer.parseInt(request.getParameter("n2"));
 
             if (request.getParameter("r1") != null) {
                 long result = addFucn(a1, a2);
                 out.println("<h1>Addition</h1>" + result);
-                storeCalculationResult("Addition", a1, a2, result);
+                storeResult(result, "addition", a1, a2);
             }
             if (request.getParameter("r2") != null) {
                 long result = subFucn(a1, a2);
                 out.println("<h1>Subtraction</h1>" + result);
-                storeCalculationResult("Subtraction", a1, a2, result);
+                storeResult(result, "subtraction", a1, a2);
             }
             if (request.getParameter("r3") != null) {
                 long result = mulFucn(a1, a2);
                 out.println("<h1>Multiplication</h1>" + result);
-                storeCalculationResult("Multiplication", a1, a2, result);
+                storeResult(result, "multiplication", a1, a2);
             }
-
-            // Database interaction example
-            int dataFromDatabase = retrieveDataFromDatabase();
-            out.println("<h1>Data from Database:</h1>" + dataFromDatabase);
 
             RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
             rd.include(request, response);
-
         } catch (Exception e) {
             e.printStackTrace();
-            out.println("<h1>Error Occurred</h1>");
         }
     }
 }
