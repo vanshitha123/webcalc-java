@@ -184,5 +184,10 @@ To check the data
 ```
 select * from calculations;
 ```
+
+###### changes you need to do
+1. calculator.java - Give your MySQL details
+2. Jenkinsfile - Github link,Tomcat details
+
 ##### Reference
 GitHub Link: ```https://github.com/kishore3k/webcalculator/tree/master```
