@@ -1,4 +1,4 @@
-/*
+// /*
 package mypackage;
 
 import org.junit.Test;
@@ -27,7 +27,9 @@ public class CalculatorTest {
         //assertThat(result, is(8L));
     }
 }
-*/
+// */
+// ----sonar-----
+/*
 package mypackage;
 
 import org.junit.Test;
@@ -53,3 +55,4 @@ public class CalculatorTest {
         assertThat(result, is(9L));
     }
 }
+// */
