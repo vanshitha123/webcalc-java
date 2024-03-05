@@ -1,4 +1,5 @@
-/*package mypackage;
+// /*
+package mypackage;
 
 import java.io.*;
 import java.sql.Connection;
@@ -101,7 +102,11 @@ public class Calculator extends HttpServlet {
         System.out.println("Subtraction: " + resultSub);
         System.out.println("Multiplication: " + resultMul);
     }
-}*/
+}
+// */
+
+// -----sonar------
+/*
 package mypackage;
 
 import java.io.*;
@@ -220,4 +225,5 @@ public class Calculator extends HttpServlet {
         }
     }
 }
+*/
 
