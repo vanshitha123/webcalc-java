@@ -88,7 +88,6 @@ public class Calculator extends HttpServlet {
             rd.include(request, response);
         } catch (Exception e) {
             e.printStackTrace();
-            // Make sure this debug feature is deactivated before delivering the code in production.
         }
     }
 
