@@ -11,18 +11,6 @@ import javax.servlet.http.*;
 
 public class Calculator extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
-
-    // Initialization method for servlet (optional)
-    public void init() throws ServletException {
-        // Initialization code, if needed
-    }
-
-    // Cleanup method for servlet (optional)
-    public void destroy() {
-        // Cleanup code, if needed
-    }
-
     public long addFucn(long first, long second) {
         return first + second;
     }
@@ -41,32 +29,33 @@ public class Calculator extends HttpServlet {
         String jdbcUser = "mysql";
         String jdbcPassword = "mysql";
 
+        // Register the JDBC driver (you might not need this if using JDBC 4.0+)
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            throw new SQLException("MySQL JDBC Driver not found.", e);
+            e.printStackTrace();
         }
 
+        // Create and return the connection
         return DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
     }
 
     private void saveToDatabase(String operation, long result) {
-        try (Connection connection = getDBConnection();
-             PreparedStatement statement = connection.prepareStatement("INSERT INTO calculations (operation, result) VALUES (?, ?)")) {
+        try (Connection connection = getDBConnection()) {
+            connection.setAutoCommit(false); // Disable auto-commit
 
-            connection.setAutoCommit(false);
-
-            statement.setString(1, operation);
-            statement.setLong(2, result);
-
-            int rowsAffected = statement.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Data successfully inserted into the database.");
-                connection.commit();
-            } else {
-                System.err.println("Failed to insert data into the database.");
+            String query = "INSERT INTO calculations (operation, result) VALUES (?, ?)";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, operation);
+                statement.setLong(2, result);
+                int rowsAffected = statement.executeUpdate();
+                if (rowsAffected > 0) {
+                    System.out.println("Data successfully inserted into the database.");
+                    connection.commit(); // Commit the transaction
+                } else {
+                    System.err.println("Failed to insert data into the database.");
+                }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -76,7 +65,6 @@ public class Calculator extends HttpServlet {
         try {
             response.setContentType("text/html");
             PrintWriter out = response.getWriter();
-
             int a1 = Integer.parseInt(request.getParameter("n1"));
             int a2 = Integer.parseInt(request.getParameter("n2"));
 
@@ -100,6 +88,18 @@ public class Calculator extends HttpServlet {
             rd.include(request, response);
         } catch (Exception e) {
             e.printStackTrace();
+            // Make sure this debug feature is deactivated before delivering the code in production.
         }
+    }
+
+    public static void main(String[] args) {
+        Calculator calculator = new Calculator();
+        long resultAdd = calculator.addFucn(5, 3);
+        long resultSub = calculator.subFucn(5, 3);
+        long resultMul = calculator.mulFucn(5, 3);
+
+        System.out.println("Addition: " + resultAdd);
+        System.out.println("Subtraction: " + resultSub);
+        System.out.println("Multiplication: " + resultMul);
     }
 }
