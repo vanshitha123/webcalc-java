@@ -5,53 +5,30 @@
 <title>Calculator</title>
 </head>
 <body>
-<h1 style="text-align: center;">Calculator</h1>
-<form action="firstHomePage" method="get">
-    <label>First number:</label>
-    <input type="text" name="n1" />
-    <br />
-    <label>Second number : </label>
-    <input type="text" name="n2" />
-    <br />
-    <div>
-        <label>
-            <input type="radio" name="operation" value="add" />Addition
-            <br />
-        </label>
-        <label>
-            <input type="radio" name="operation" value="sub" />Subtraction 
-            <br />
-        </label>
-        <label>
-            <input type="radio" name="operation" value="mul" />Multiplication
-            <br />
-        </label>
-    </div>
-    <input type="submit" value="Submit (GET)" />
-</form>
-
-<form action="firstHomePage" method="post">
-    <label>First number:</label>
-    <input type="text" name="n1" />
-    <br />
-    <label>Second number : </label>
-    <input type="text" name="n2" />
-    <br />
-    <div>
-        <label>
-            <input type="radio" name="operation" value="add" />Addition
-            <br />
-        </label>
-        <label>
-            <input type="radio" name="operation" value="sub" />Subtraction 
-            <br />
-        </label>
-        <label>
-            <input type="radio" name="operation" value="mul" />Multiplication
-            <br />
-        </label>
-    </div>
-    <input type="submit" value="Submit (POST)" />
+<h1 style="text_align=center">Calculator</h1>
+      <form action="firstHomePage" method="get">
+<label>first number:</label>
+<input type="text" name="n1" />
+<br />
+<label>Second number : </label>
+<input type="text" name="n2" />
+<br />
+ <div>
+<label>
+<input type="radio" name="r1" value="add" />addition
+<br />
+</label>
+<label>
+<input type="radio" name="r2" value="sub" />subtraction 
+<br />
+</label>
+<label>
+<input type="radio" name="r3" value="prod" />product
+<br />
+</label>
+ 
+</div>
+<input type="submit" value="submit" />
 </form>
 </body>
 </html>
