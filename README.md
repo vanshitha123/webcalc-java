@@ -184,7 +184,7 @@ To check the data
 ```
 select * from calculations;
 ```
-#### Sonarqube Installation
+## Sonarqube Installation
 -----------------------------
 We will be installing Docker for installing Sonarqube in the container
 ```
@@ -220,50 +220,78 @@ After Deafult login, You will be asked for the new SonarQube password. Give the 
 Jenkins PLugin setup for SonarQube,
 
 Step 1: Go to Manage Jenkins in the Jenkins Dashboard.
+
 ![image](https://github.com/beeru405/webcalc-java/assets/101712802/b585d642-5900-4aef-948c-972a52b7e020)
+
 Step 2: Select Plugin from the option.
+
 ![image](https://github.com/beeru405/webcalc-java/assets/101712802/447a4a72-dfd3-4e4b-9796-c4bda8fa97f0)
 
+
 Step 3: Select Available plugins search for SonarQube Scanner, and click on Install. (without restart)
+
 ![image](https://github.com/beeru405/webcalc-java/assets/101712802/4371ea0f-f39d-4c4f-a44a-4db37a43f10d)
+
 
 
 After this stage, we will set up the SonarQube to be integrated with Jenkins, Go to Server Url, and follow the below images.
 
 ![image](https://github.com/beeru405/webcalc-java/assets/101712802/4304fabf-9746-4063-9936-fe1111da690f)
+
 ![image](https://github.com/beeru405/webcalc-java/assets/101712802/2051540d-c225-4ca6-8665-f9c3053d4ae6)
+
 ![image](https://github.com/beeru405/webcalc-java/assets/101712802/32112bc7-49e7-4511-bb0a-1bd814354802)
+
 Copy the Unique credential for the token and go the the jenkins server URL. In the Jenkins Server URL, In Dashboard click manage Jenkins-> credentials and click on global.
+
 ![image](https://github.com/beeru405/webcalc-java/assets/101712802/baf15221-3674-4b7f-a82c-be0578cf2a4b)
+
 Click on the Add Credentials, and fill in the details of the token in the dialogue box.
+
 ![image](https://github.com/beeru405/webcalc-java/assets/101712802/deb792bc-3f4b-41f6-a76e-4c0bdf8ae527)
+
 
 Choose kind as Secret Text and scope as Global. Put the copied unique code in the secret field, and add the ID and description to the token. Later this token will be used to authenticate to SonarQube Server.
 
+
 ![image](https://github.com/beeru405/webcalc-java/assets/101712802/1d78c494-e893-4807-9335-72bc30ba5b33)
+
 Click on Create to create the Token.
+
 ![image](https://github.com/beeru405/webcalc-java/assets/101712802/62662133-e251-4b20-a544-f9ceaebb94c2)
 
+
 Now set up the SonarQube tool in the ManageJenkins -> Tools section and provide the SonarQube Url and Authentication token ID that we just created in jenkins Global Credentials.
+
 ![image](https://github.com/beeru405/webcalc-java/assets/101712802/23650527-097e-4838-8cc4-8497f7b7169c)
+
 Set up the SonarQube scanner plugin installation in the Global Tools settings for easy SonarQube integration with Jenkins.
+
 ![image](https://github.com/beeru405/webcalc-java/assets/101712802/9709352a-fde9-4533-ab8d-d510125763a5)
+
 Set up the Webhook connection with SonarQube.In Administration -> Configuration -> WebHooks.Webhooks in Sonarqube are used to tell the third Party(Jenkins) when the code analysis is complete.
+
 ```
 http://<JENKINS-IP:8090>/sonarqube-webhook
 ```
 
 ![image](https://github.com/beeru405/webcalc-java/assets/101712802/348af651-5a1d-4b8e-b465-402ebb2a7bd2)
 
+
 ![image](https://github.com/beeru405/webcalc-java/assets/101712802/74a29ecb-0fce-45aa-a9e5-5e93c46aafab)
+
 
 ![image](https://github.com/beeru405/webcalc-java/assets/101712802/f9b5e5b9-ff1c-4742-8ad5-af550fd1e0b5)
 
+
 ![Screenshot from 2024-03-11 14-37-54](https://github.com/beeru405/webcalc-java/assets/101712802/c581d32c-eaa9-43d0-8451-7f5b11ab4683)
+
 After the SonarQube Pipeline is successful you can see the SonarQube section in the left panel. Click on it to see the full report.
 
 
+
 ![image](https://github.com/beeru405/webcalc-java/assets/101712802/efbe818c-9d32-441e-a114-2ed0fcf8a0ba)
+
 
 
 
