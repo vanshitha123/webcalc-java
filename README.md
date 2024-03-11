@@ -207,7 +207,7 @@ docker run -d --name sonarqube-cont -p 9000:9000 sonarqube:lts-community
 http://<PUBLIC-IP-OF-INSTANCE>:9000
 ```
 
-###### changes you need to do
+#### changes you need to do in Github
 1. calculator.java - Give your MySQL details
 2. Jenkinsfile - Github link,Tomcat details
 
