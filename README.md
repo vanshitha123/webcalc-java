@@ -206,6 +206,13 @@ docker run -d --name sonarqube-cont -p 9000:9000 sonarqube:lts-community
 ```
 http://<PUBLIC-IP-OF-INSTANCE>:9000
 ```
+Login the SonarQube using the default credentials
+```
+username: admin
+password: admin
+```
+![image](https://github.com/beeru405/webcalc-java/assets/101712802/b2d8cfcf-3bba-4a64-862e-a0fa507e9213)
+
 
 #### changes you need to do in Github
 1. calculator.java - Give your MySQL details
