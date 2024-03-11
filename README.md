@@ -184,6 +184,28 @@ To check the data
 ```
 select * from calculations;
 ```
+#### Sonarqube Installation
+-----------------------------
+We will be installing Docker for installing Sonarqube in the container
+```
+sudo apt-get update
+sudo apt-get install docker.io -y
+```
+
+After this gran the Ubuntu user the permission to access Docker
+```
+sudo usermod -aG docker $USER
+newgrp docker
+sudo chmod 777 /var/run/docker.sock
+```
+Starting Sonarqube container:
+```
+docker run -d --name sonarqube-cont -p 9000:9000 sonarqube:lts-community
+```
+#To login
+```
+http://<PUBLIC-IP-OF-INSTANCE>:9000
+```
 
 ###### changes you need to do
 1. calculator.java - Give your MySQL details
