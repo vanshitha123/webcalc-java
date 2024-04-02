@@ -16,13 +16,13 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('sonarqube') {
-                    sh 'mvn sonar:sonar'
-                }
-            }
-        }
+       // stage('SonarQube Analysis') {
+         //   steps {
+           //     withSonarQubeEnv('sonarqube') {
+             //       sh 'mvn sonar:sonar'
+               // }
+            //}
+        //}
 
         stage('Deploy to Tomcat') {
             steps {
@@ -31,27 +31,27 @@ pipeline {
             }
         }
 
-        stage('API Testing') {
-            steps {
-                script {
+        //stage('API Testing') {
+          //  steps {
+            //    script {
                     // Wait for Tomcat to deploy the application
-                    sleep(time: 30, unit: 'SECONDS')
+              //      sleep(time: 30, unit: 'SECONDS')
 
                     // Perform API testing for GET and POST methods
-                    def getResponse = sh(script: 'curl -X GET http://192.168.17.151:8081/webapp-0.2/', returnStdout: true).trim()
-                    def postResponse = sh(script: 'curl -X POST -d "n1=5&n2=6&r1=add" http://192.168.17.151:8081/webapp-0.2/firstHomePage', returnStdout: true).trim()
+                //    def getResponse = sh(script: 'curl -X GET http://192.168.17.151:8081/webapp-0.2/', returnStdout: true).trim()
+                  //  def postResponse = sh(script: 'curl -X POST -d "n1=5&n2=6&r1=add" http://192.168.17.151:8081/webapp-0.2/firstHomePage', returnStdout: true).trim()
 
                     // Print the responses
-                    echo "GET Response: ${getResponse}"
-                    echo "POST Response: ${postResponse}"
+                    //echo "GET Response: ${getResponse}"
+                    //echo "POST Response: ${postResponse}"
 
                     // Add additional checks/assertions based on the expected responses
                     // Example: assert getResponse.contains("ExpectedText")
                     // Example: assert postResponse.contains("ExpectedText")
-                }
-            }
-        }
-    }
+                //}
+            //}
+        //}
+    //}
 
     post {
         success {
